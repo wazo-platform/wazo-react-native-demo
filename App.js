@@ -42,9 +42,9 @@ export default class App extends React.Component {
   
         apiClient.confd.getUserLineSip(data.token, data.uuid, line.id).then((sipLine) => {
           this.initializeWebRtc(sipLine, server);
-        });
-      });
-    });
+        }).catch(console.log);
+      }).catch(console.log);
+    }).catch(console.log);
   };
 
   initializeWebRtc(sipLine, host) {
@@ -85,16 +85,17 @@ export default class App extends React.Component {
     return (
       <View style={styles.container}>
         {!connected && (
-          <>
+          <React.Fragment>
             <TextInput
               autoCapitalize="none"
               onChangeText={(username) => this.setState({ username })}
+              value={this.state.username}
               placeholder="Username"
             />
             <TextInput
               autoCapitalize="none"
-              keyboardType="visible-password"
               onChangeText={(password) => this.setState({ password })}
+              value={this.state.password}
               placeholder="Password"
             />
             <TextInput
@@ -105,21 +106,22 @@ export default class App extends React.Component {
             />
 
             <TouchableOpacity onPress={this.authenticate.bind(this)}><Text>Login</Text></TouchableOpacity>
-          </>
+          </React.Fragment>
         )}
 
         {connected && (
-          <>
+          <React.Fragment>
             <TextInput
               autoCapitalize="none"
               keyboardType="numeric"
               onChangeText={(number) => this.setState({ number })}
               onSubmitEditing={this.call.bind(this)}
+              value={this.state.number}
               placeholder="Number"
             />
 
             <TouchableOpacity onPress={this.call.bind(this)}><Text>Call</Text></TouchableOpacity>
-          </>
+          </React.Fragment>
         )}
       </View>
     );
