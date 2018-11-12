@@ -97,6 +97,11 @@ android {
     compileSdkVersion 26
     buildToolsVersion "26.0.2"
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     defaultConfig {
         applicationId "com.wazoreactnativedemo"
         minSdkVersion 16
@@ -137,6 +142,8 @@ android {
 }
 
 dependencies {
+    compile project(':WebRTCModule')
+
     compile fileTree(dir: "libs", include: ["*.jar"])
     compile "com.android.support:appcompat-v7:23.0.1"
     compile "com.facebook.react:react-native:+"  // From node_modules
