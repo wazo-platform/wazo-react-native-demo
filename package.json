@@ -1,0 +1,19 @@
+{
+  "name": "wazo-react-native-demo",
+  "private": true,
+  "scripts": {
+    "start": "./node_modules/.bin/react-native start",
+    "android": "./node_modules/.bin/react-native run-android",
+    "ios": "./node_modules/.bin/react-native run-ios"
+  },
+  "dependencies": {
+    "@wazo/sdk": "git://github.com/wazo-pbx/wazo-js-sdk.git#revert_sip_hack",
+    "react": "^16.2.0",
+    "react-native": "^0.55.4",
+    "react-native-webrtc": "1.63.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "@babel/preset-env": "^7.1.0"
+  }
+}
