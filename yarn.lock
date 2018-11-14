@@ -442,7 +442,7 @@
     "@babel/helper-builder-binary-assignment-operator-visitor" "^7.1.0"
     "@babel/helper-plugin-utils" "^7.0.0"
 
-"@babel/plugin-transform-flow-strip-types@^7.0.0", "@babel/plugin-transform-flow-strip-types@^7.0.0-beta":
+"@babel/plugin-transform-flow-strip-types@^7.0.0-beta":
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/@babel/plugin-transform-flow-strip-types/-/plugin-transform-flow-strip-types-7.0.0.tgz#c40ced34c2783985d90d9f9ac77a13e6fb396a01"
   integrity sha512-WhXUNb4It5a19RsgKKbQPrjmy4yWOY1KynpEbNw7bnd1QTcrT/EIl3MJvnGgpgvrKyKbqX7nUNOJfkpLOnoDKA==
@@ -730,15 +730,16 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
-"@wazo/sdk@git://github.com/wazo-pbx/wazo-js-sdk.git#revert_sip_hack":
-  version "0.6.1"
-  resolved "git://github.com/wazo-pbx/wazo-js-sdk.git#87265d10f666d7cd213aef82a07cc3331b19f42e"
+"@wazo/sdk@~0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@wazo/sdk/-/sdk-0.7.0.tgz#cb7a894ac9aae385219b7ee87ac9f4e012169a12"
+  integrity sha512-StefNPtAlIvGAVfi9gOoXJIU/kffwFK+RaBAPPb3kCDs1u+C/05BuRtvyn3CUhiv5FptH7b6DO1u3KkMumb7Ng==
   dependencies:
-    "@babel/plugin-transform-flow-strip-types" "^7.0.0"
     js-base64 "^2.4.9"
     node-fetch "^2.2.0"
-    reconnecting-websocket "^4.1.5"
-    webrtc-adapter "^6.4.3"
+    reconnecting-websocket "^4.1.10"
+    sip.js "0.11.1"
+    webrtc-adapter "^6.4.4"
 
 abbrev@1:
   version "1.1.1"
@@ -1953,6 +1954,11 @@ cross-spawn@^5.0.1, cross-spawn@^5.1.0:
     lru-cache "^4.0.1"
     shebang-command "^1.2.0"
     which "^1.2.9"
+
+crypto-js@^3.1.9-1:
+  version "3.1.9-1"
+  resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-3.1.9-1.tgz#fda19e761fc077e01ffbfdc6e9fdfc59e8806cd8"
+  integrity sha1-/aGedh/Ad+Af+/3G6f38WeiAbNg=
 
 debug@2.6.9, debug@^2.1.2, debug@^2.2.0, debug@^2.3.3, debug@^2.6.8, debug@^2.6.9:
   version "2.6.9"
@@ -3869,6 +3875,11 @@ process@~0.5.1:
   resolved "https://registry.yarnpkg.com/process/-/process-0.5.2.tgz#1638d8a8e34c2f440a91db95ab9aeb677fc185cf"
   integrity sha1-FjjYqONML0QKkduVq5rrZ3/Bhc8=
 
+promiscuous@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/promiscuous/-/promiscuous-0.6.0.tgz#54014cd3d62cafe831e3354990c05ff5b78c8892"
+  integrity sha1-VAFM09Ysr+gx4zVJkMBf9beMiJI=
+
 promise@^7.1.1:
   version "7.3.1"
   resolved "https://registry.yarnpkg.com/promise/-/promise-7.3.1.tgz#064b72602b18f90f29192b8b1bc418ffd1ebd3bf"
@@ -4066,7 +4077,7 @@ readable-stream@^2.0.1, readable-stream@^2.0.6, readable-stream@^2.1.5, readable
     string_decoder "~1.1.1"
     util-deprecate "~1.0.1"
 
-reconnecting-websocket@^4.1.5:
+reconnecting-websocket@^4.1.10:
   version "4.1.10"
   resolved "https://registry.yarnpkg.com/reconnecting-websocket/-/reconnecting-websocket-4.1.10.tgz#15485b5c5266ab6dd99187e23e8da207d24c4270"
   integrity sha512-x6vgqa8q9KRuJyFkOvBKH1TfyTmN5OWQUf1MIsblfOSY29VE+iI9cKqmIuPvg9TO/hUBxdmUIVutDkcdbqFwZg==
@@ -4439,6 +4450,15 @@ simple-plist@^0.2.1:
     bplist-creator "0.0.7"
     bplist-parser "0.1.1"
     plist "2.0.1"
+
+sip.js@0.11.1:
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/sip.js/-/sip.js-0.11.1.tgz#5bd856bef09f1c79f3c9cbec6590cd37aa99fcb6"
+  integrity sha512-IdTUWc1KtpRvcO2qw4mSOp/mzridYhw3+nw/gPrvfLf14eCOlJU6eBJ9XmFqFPW8Bradea4y5wxcvcOZzaLSog==
+  dependencies:
+    crypto-js "^3.1.9-1"
+  optionalDependencies:
+    promiscuous "^0.6.0"
 
 slash@^1.0.0:
   version "1.0.0"
@@ -4875,7 +4895,7 @@ watch@~0.18.0:
     exec-sh "^0.2.0"
     minimist "^1.2.0"
 
-webrtc-adapter@^6.4.3:
+webrtc-adapter@^6.4.4:
   version "6.4.4"
   resolved "https://registry.yarnpkg.com/webrtc-adapter/-/webrtc-adapter-6.4.4.tgz#a1e54cc2765c57976d3d682a0de15110b91115d7"
   integrity sha512-VNXpC9UTbNovaiPqEtUmMuBolo4K6V4qgYnoMl3i0q9LnXTGaFeyIQiFiLp5qoKJJGW3EJSLFX6qYDlgU6k4pg==

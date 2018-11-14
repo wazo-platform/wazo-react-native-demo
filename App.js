@@ -1,6 +1,12 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native';
-import { RTCPeerConnection, RTCSessionDescription, MediaStream, getUserMedia } from 'react-native-webrtc';
+
+import {
+  RTCPeerConnection,
+  RTCSessionDescription,
+  MediaStream,
+  getUserMedia,
+} from 'react-native-webrtc';
 
 import { WazoApiClient, WazoWebRTCClient } from '@wazo/sdk';
 
@@ -31,15 +37,15 @@ export default class App extends React.Component {
   authenticate() {
     const { server, username, password } = this.state;
     const apiClient = new WazoApiClient({ server });
-  
+
     apiClient.auth.logIn({ username, password }).then((data) => {
       const userToken = data.token;
-  
+
       apiClient.confd.getUser(userToken, data.uuid).then((user) => {
         const line = user.lines[0];
-  
+
         console.log('user connected', line);
-  
+
         apiClient.confd.getUserLineSip(data.token, data.uuid, line.id).then((sipLine) => {
           this.initializeWebRtc(sipLine, server);
         }).catch(console.log);
@@ -58,7 +64,6 @@ export default class App extends React.Component {
         audio: true
       }
     });
-
 
     this.webRtcClient.on('invite', (session) => {
       try {

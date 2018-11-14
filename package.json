@@ -7,10 +7,11 @@
     "ios": "./node_modules/.bin/react-native run-ios"
   },
   "dependencies": {
-    "@wazo/sdk": "git://github.com/wazo-pbx/wazo-js-sdk.git#revert_sip_hack",
+    "@wazo/sdk": "~0.7.0",
     "react": "^16.2.0",
     "react-native": "^0.55.4",
-    "react-native-webrtc": "1.63.0"
+    "react-native-webrtc": "1.63.0",
+    "sip.js": "0.11.1"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",
