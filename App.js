@@ -19,6 +19,18 @@ global.navigator.mediaDevices = {
   getUserMedia: getUserMedia,
 };
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  button: {
+    paddingTop: 20
+  }
+});
+
 export default class App extends React.Component {
   constructor(props) {
     super(props);
@@ -26,7 +38,7 @@ export default class App extends React.Component {
     this.webRtcClient = null;
 
     this.state = {
-      server: 'demo.wazo.community',
+      server: 'demo.wazo.io',
       username: '',
       password: '',
       number: '',
@@ -110,7 +122,7 @@ export default class App extends React.Component {
               placeholder="Server"
             />
 
-            <TouchableOpacity onPress={this.authenticate.bind(this)}><Text>Login</Text></TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={this.authenticate.bind(this)}><Text>Login</Text></TouchableOpacity>
           </React.Fragment>
         )}
 
@@ -125,19 +137,10 @@ export default class App extends React.Component {
               placeholder="Number"
             />
 
-            <TouchableOpacity onPress={this.call.bind(this)}><Text>Call</Text></TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={this.call.bind(this)}><Text>Call</Text></TouchableOpacity>
           </React.Fragment>
         )}
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
