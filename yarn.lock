@@ -730,15 +730,16 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
-"@wazo/sdk@~0.7.0":
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/@wazo/sdk/-/sdk-0.7.0.tgz#cb7a894ac9aae385219b7ee87ac9f4e012169a12"
-  integrity sha512-StefNPtAlIvGAVfi9gOoXJIU/kffwFK+RaBAPPb3kCDs1u+C/05BuRtvyn3CUhiv5FptH7b6DO1u3KkMumb7Ng==
+"@wazo/sdk@~0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@wazo/sdk/-/sdk-0.8.0.tgz#b1fec96795db292d2764f8f34a634bdbdc3d5d62"
+  integrity sha512-EJ7q4JIMMT+3o1wFmOx1SMx5UMl8f41XTyq8JRjl3tSjlH15XQXzhzyiKJfXIGz0SofAx+6RPrjT5UmfvMAzKA==
   dependencies:
     js-base64 "^2.4.9"
+    moment "^2.22.2"
     node-fetch "^2.2.0"
     reconnecting-websocket "^4.1.10"
-    sip.js "0.11.1"
+    sip.js "0.11.6"
     webrtc-adapter "^6.4.4"
 
 abbrev@1:
@@ -3404,6 +3405,11 @@ mkdirp@^0.5.0, mkdirp@^0.5.1:
   dependencies:
     minimist "0.0.8"
 
+moment@^2.22.2:
+  version "2.22.2"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.2.tgz#3c257f9839fc0e93ff53149632239eb90783ff66"
+  integrity sha1-PCV/mDn8DpP/UxSWMiOeuQeD/2Y=
+
 morgan@^1.9.0:
   version "1.9.1"
   resolved "https://registry.yarnpkg.com/morgan/-/morgan-1.9.1.tgz#0a8d16734a1d9afbc824b99df87e738e58e2da59"
@@ -3942,10 +3948,10 @@ react-devtools-core@3.1.0:
     shell-quote "^1.6.1"
     ws "^2.0.3"
 
-react-native-webrtc@1.63.0:
-  version "1.63.0"
-  resolved "https://registry.yarnpkg.com/react-native-webrtc/-/react-native-webrtc-1.63.0.tgz#702154d287ff3091de714c4af7482ffa0523c3e8"
-  integrity sha512-NRf2aH5OZanOfXMkGFKq5svZLoqp+CihRDBGarxtRxkEv8Gxm+a8SyB6NK+/VnxwF+h8zahYDbmrx+v0A8Gm4g==
+react-native-webrtc@1.67.1:
+  version "1.67.1"
+  resolved "https://registry.yarnpkg.com/react-native-webrtc/-/react-native-webrtc-1.67.1.tgz#19c20f7f5fa3fe6c6e893922c0338233835f45b4"
+  integrity sha512-B61khaSiGx4wnGbPjghAo78Fvuzxnycfz1lXnQI8OLMhuaIrvgAQpH/9wBdg46HXX2d8lnwWo/A13o3ff+b4/g==
   dependencies:
     base64-js "^1.1.2"
     event-target-shim "^1.0.5"
@@ -4455,6 +4461,15 @@ sip.js@0.11.1:
   version "0.11.1"
   resolved "https://registry.yarnpkg.com/sip.js/-/sip.js-0.11.1.tgz#5bd856bef09f1c79f3c9cbec6590cd37aa99fcb6"
   integrity sha512-IdTUWc1KtpRvcO2qw4mSOp/mzridYhw3+nw/gPrvfLf14eCOlJU6eBJ9XmFqFPW8Bradea4y5wxcvcOZzaLSog==
+  dependencies:
+    crypto-js "^3.1.9-1"
+  optionalDependencies:
+    promiscuous "^0.6.0"
+
+sip.js@0.11.6:
+  version "0.11.6"
+  resolved "https://registry.yarnpkg.com/sip.js/-/sip.js-0.11.6.tgz#a5e748307d2b0f1dd9e8f1365893d771a7e72f8e"
+  integrity sha512-ZxD3h6gpT4LYaG3ihFb5U3gOGGz+ObiNnzDgOlyCyu0zXZTqvzGSnfbXwIsGCES/N0z+K4tG21GhWpdUr2F7Ig==
   dependencies:
     crypto-js "^3.1.9-1"
   optionalDependencies:
