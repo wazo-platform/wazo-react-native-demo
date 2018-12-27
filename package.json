@@ -7,11 +7,13 @@
     "ios": "./node_modules/.bin/react-native run-ios"
   },
   "dependencies": {
-    "@wazo/sdk": "~0.8.0",
+    "@wazo/sdk": "0.9.10",
     "react": "^16.2.0",
     "react-native": "^0.55.4",
+    "react-native-callkeep": "git+https://github.com/wazo-pbx/react-native-callkeep.git#add_connection_service",
     "react-native-webrtc": "1.67.1",
-    "sip.js": "0.11.1"
+    "sip.js": "0.11.1",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",

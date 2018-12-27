@@ -690,11 +690,12 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
-"@wazo/sdk@~0.8.0":
-  version "0.8.5"
-  resolved "https://registry.yarnpkg.com/@wazo/sdk/-/sdk-0.8.5.tgz#b14fc52a2278ba5df6a350cb32f26a9b6f323ec3"
-  integrity sha512-1P0PveP89+uGlYgUH9v8Epjn+NElZnH3/EGTlQrB+eHrwWE19J+ZzV3hevXg6GBNjXy3xVoKEpk24PTO54SmSQ==
+"@wazo/sdk@0.9.10":
+  version "0.9.10"
+  resolved "https://registry.yarnpkg.com/@wazo/sdk/-/sdk-0.9.10.tgz#6f25ac623ec05b7fdd0e8232d0b84b3e5223d639"
+  integrity sha512-p7XyIbR9FdffxgPViLNTLQRB0pFdmEQV59QuBVoz9kuZRMy6twAXa7Y3dZrenmpaMu4Ldm9GCOpOGzpLOICcfQ==
   dependencies:
+    google-libphonenumber "^3.1.15"
     js-base64 "^2.4.9"
     moment "^2.22.2"
     node-fetch "^2.2.0"
@@ -2462,6 +2463,11 @@ globals@^9.18.0:
   resolved "https://registry.yarnpkg.com/globals/-/globals-9.18.0.tgz#aa3896b3e69b487f17e31ed2143d69a8e30c2d8a"
   integrity sha512-S0nG3CLEQiY/ILxqtztTWH/3iRRdyBLw6KMDxnKMchrtbj2OFmehVh0WUCfW3DUrIgx/qFrJPICrq4Z4sTR9UQ==
 
+google-libphonenumber@^3.1.15:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/google-libphonenumber/-/google-libphonenumber-3.2.1.tgz#0395f7099ba05012abad78685955e8ba5cdd6373"
+  integrity sha512-SUE8hWi8sJSK00NSuD+lJWVUNJtmoHRjXlAcN6dR3kTc4HYY7rey6/LfOC6COW8Wup07Fup1p0Tao57liq9HRA==
+
 graceful-fs@^4.1.11, graceful-fs@^4.1.2, graceful-fs@^4.1.3, graceful-fs@^4.1.6, graceful-fs@^4.1.9:
   version "4.1.15"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.15.tgz#ffb703e1066e8a0eeaa4c8b80ba9253eeefbfb00"
@@ -3921,6 +3927,10 @@ react-devtools-core@3.1.0:
     shell-quote "^1.6.1"
     ws "^2.0.3"
 
+"react-native-callkeep@git+https://github.com/wazo-pbx/react-native-callkeep.git#add_connection_service":
+  version "0.0.1"
+  resolved "git+https://github.com/wazo-pbx/react-native-callkeep.git#8cf36b1e6f8b3ee9a0bdb8da92c4a64b7be2aba1"
+
 react-native-webrtc@1.67.1:
   version "1.67.1"
   resolved "https://registry.yarnpkg.com/react-native-webrtc/-/react-native-webrtc-1.67.1.tgz#19c20f7f5fa3fe6c6e893922c0338233835f45b4"
@@ -4854,6 +4864,11 @@ uuid@3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.0.1.tgz#6544bba2dfda8c1cf17e629a3a305e2bb1fee6c1"
   integrity sha1-ZUS7ot/ajBzxfmKaOjBeK7H+5sE=
+
+uuid@^3.3.2:
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
+  integrity sha512-yXJmeNaw3DnnKAOKJE51sL/ZaYfWJRl1pK9dr19YFCu0ObS231AB1/LbqTKRAQ5kw8A90rA6fr4riOUpTZvQZA==
 
 validate-npm-package-license@^3.0.1:
   version "3.0.4"
