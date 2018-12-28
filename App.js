@@ -23,10 +23,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  input: {
+    width: '80%',
+  },
   button: {
-    paddingTop: 20,
+    paddingTop: 50,
   },
 });
+const hitSlop = { top: 10, left: 10, right: 10, bottom: 10};
 
 export default class App extends React.Component {
 
@@ -209,11 +213,11 @@ export default class App extends React.Component {
       <View style={styles.container}>
         {!connected && (
           <React.Fragment>
-            <TextInput autoCapitalize="none" onChangeText={username => this.setState({ username })} placeholder="Username" value={this.state.username} />
-            <TextInput autoCapitalize="none" onChangeText={password => this.setState({ password })} placeholder="Password" value={this.state.password} />
-            <TextInput autoCapitalize="none" defaultValue={server} onChangeText={server => this.setState({ server })} placeholder="Server" />
+            <TextInput autoCapitalize="none" onChangeText={username => this.setState({ username })} placeholder="Username" value={this.state.username} style={styles.input} />
+            <TextInput autoCapitalize="none" onChangeText={password => this.setState({ password })} placeholder="Password" value={this.state.password} style={styles.input} />
+            <TextInput autoCapitalize="none" defaultValue={server} onChangeText={server => this.setState({ server })} placeholder="Server" style={styles.input} />
 
-            <TouchableOpacity onPress={this.authenticate.bind(this)} style={styles.button}>
+            <TouchableOpacity onPress={this.authenticate.bind(this)} style={styles.button} hitSlop={hitSlop}>
               <Text>Login</Text>
             </TouchableOpacity>
           </React.Fragment>
@@ -227,21 +231,22 @@ export default class App extends React.Component {
               onChangeText={number => this.setState({ number })}
               onSubmitEditing={this.call.bind(this)}
               placeholder="Number"
+              style={styles.input}
               value={this.state.number}
             />
 
             {!this.state.ringing && !this.state.inCall && (
-              <TouchableOpacity onPress={() => this.call(this.state.number)} style={styles.button}>
+              <TouchableOpacity onPress={() => this.call(this.state.number)} style={styles.button} hitSlop={hitSlop}>
                 <Text>Call</Text>
               </TouchableOpacity>
             )}
             {this.state.ringing && (
-              <TouchableOpacity onPress={this.answer} style={styles.button}>
+              <TouchableOpacity onPress={this.answer} style={styles.button} hitSlop={hitSlop}>
                 <Text>Answer</Text>
               </TouchableOpacity>
             )}
             {this.state.inCall && (
-              <TouchableOpacity onPress={this.hangup} style={styles.button}>
+              <TouchableOpacity onPress={this.hangup} style={styles.button} hitSlop={hitSlop}>
                 <Text>Hangup</Text>
               </TouchableOpacity>
             )}
