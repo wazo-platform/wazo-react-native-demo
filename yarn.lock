@@ -4440,15 +4440,6 @@ simple-plist@^0.2.1:
     bplist-parser "0.1.1"
     plist "2.0.1"
 
-sip.js@0.11.1:
-  version "0.11.1"
-  resolved "https://registry.yarnpkg.com/sip.js/-/sip.js-0.11.1.tgz#5bd856bef09f1c79f3c9cbec6590cd37aa99fcb6"
-  integrity sha512-IdTUWc1KtpRvcO2qw4mSOp/mzridYhw3+nw/gPrvfLf14eCOlJU6eBJ9XmFqFPW8Bradea4y5wxcvcOZzaLSog==
-  dependencies:
-    crypto-js "^3.1.9-1"
-  optionalDependencies:
-    promiscuous "^0.6.0"
-
 sip.js@0.11.6:
   version "0.11.6"
   resolved "https://registry.yarnpkg.com/sip.js/-/sip.js-0.11.6.tgz#a5e748307d2b0f1dd9e8f1365893d771a7e72f8e"
