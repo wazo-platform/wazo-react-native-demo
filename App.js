@@ -52,10 +52,12 @@ export default class App extends React.Component {
   initializeCallKeep = () => {
     // Initialise RNCallKit
     const options = {
-      appName: 'WazoReactNativeDemo',
+      ios: {
+        appName: 'WazoReactNativeDemo',
+      },
       android: {
-        title: 'Permissions required',
-        description: 'This application needs to access your phone accounts',
+        alertTitle: 'Permissions required',
+        alertDescription: 'This application needs to access your phone accounts',
         cancelButton: 'Cancel',
         okButton: 'ok',
       }
@@ -187,7 +189,6 @@ export default class App extends React.Component {
   };
 
   onNativeCall = ({ handle }) => {
-    console.log('onNativeCall', handle);
     // Called when performing call from native Contact app
     this.call(handle);
   };
