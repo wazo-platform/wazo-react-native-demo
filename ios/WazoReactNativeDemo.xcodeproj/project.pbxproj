@@ -49,8 +49,8 @@
 		3204A8C0217DC4ED0042B629 /* libc.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 3204A8BF217DC4ED0042B629 /* libc.tbd */; };
 		3204A8C2217DC4F30042B629 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 3204A8C1217DC4F30042B629 /* libsqlite3.tbd */; };
 		327D383A21D51E9F00F073E7 /* CallKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 327D383921D51E9F00F073E7 /* CallKit.framework */; };
-		327D384121D51EC400F073E7 /* libRNCallKeep.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 327D384021D51EBE00F073E7 /* libRNCallKeep.a */; };
 		327D384321D51EC800F073E7 /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 327D384221D51EC800F073E7 /* Intents.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		329E6A5C21D66F4000131D66 /* libRNCallKeep.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 329E6A5B21D66E7300131D66 /* libRNCallKeep.a */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
@@ -218,9 +218,9 @@
 			remoteGlobalIDString = 83CBBA2D1A601D0E00E9B192;
 			remoteInfo = React;
 		};
-		327D383F21D51EBE00F073E7 /* PBXContainerItemProxy */ = {
+		329E6A5A21D66E7300131D66 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 327D383B21D51EBE00F073E7 /* RNCallKeep.xcodeproj */;
+			containerPortal = 329E6A5621D66E7200131D66 /* RNCallKeep.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 234528921E0B88C700D1A033;
 			remoteInfo = RNCallKeep;
@@ -402,8 +402,8 @@
 		3204A8BF217DC4ED0042B629 /* libc.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libc.tbd; path = usr/lib/libc.tbd; sourceTree = SDKROOT; };
 		3204A8C1217DC4F30042B629 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		327D383921D51E9F00F073E7 /* CallKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CallKit.framework; path = System/Library/Frameworks/CallKit.framework; sourceTree = SDKROOT; };
-		327D383B21D51EBE00F073E7 /* RNCallKeep.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNCallKeep.xcodeproj; path = "../node_modules/react-native-callkeep/ios/RNCallKeep.xcodeproj"; sourceTree = "<group>"; };
 		327D384221D51EC800F073E7 /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
+		329E6A5621D66E7200131D66 /* RNCallKeep.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNCallKeep.xcodeproj; path = "../node_modules/react-native-callkeep/ios/RNCallKeep.xcodeproj"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
@@ -423,8 +423,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				329E6A5C21D66F4000131D66 /* libRNCallKeep.a in Frameworks */,
 				327D384321D51EC800F073E7 /* Intents.framework in Frameworks */,
-				327D384121D51EC400F073E7 /* libRNCallKeep.a in Frameworks */,
 				327D383A21D51E9F00F073E7 /* CallKit.framework in Frameworks */,
 				3204A8C2217DC4F30042B629 /* libsqlite3.tbd in Frameworks */,
 				3204A8C0217DC4ED0042B629 /* libc.tbd in Frameworks */,
@@ -624,10 +624,10 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		327D383C21D51EBE00F073E7 /* Products */ = {
+		329E6A5721D66E7200131D66 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				327D384021D51EBE00F073E7 /* libRNCallKeep.a */,
+				329E6A5B21D66E7300131D66 /* libRNCallKeep.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -653,7 +653,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				327D383B21D51EBE00F073E7 /* RNCallKeep.xcodeproj */,
+				329E6A5621D66E7200131D66 /* RNCallKeep.xcodeproj */,
 				3204A880217DC3960042B629 /* RCTWebRTC.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
@@ -883,8 +883,8 @@
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
 				},
 				{
-					ProductGroup = 327D383C21D51EBE00F073E7 /* Products */;
-					ProjectRef = 327D383B21D51EBE00F073E7 /* RNCallKeep.xcodeproj */;
+					ProductGroup = 329E6A5721D66E7200131D66 /* Products */;
+					ProjectRef = 329E6A5621D66E7200131D66 /* RNCallKeep.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -1038,11 +1038,11 @@
 			remoteRef = 3204A895217DC3960042B629 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		327D384021D51EBE00F073E7 /* libRNCallKeep.a */ = {
+		329E6A5B21D66E7300131D66 /* libRNCallKeep.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libRNCallKeep.a;
-			remoteRef = 327D383F21D51EBE00F073E7 /* PBXContainerItemProxy */;
+			remoteRef = 329E6A5A21D66E7300131D66 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		3DAD3E841DF850E9000B6D8A /* libRCTImage-tvOS.a */ = {

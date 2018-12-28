@@ -39,9 +39,9 @@ export default class App extends React.Component {
 
     this.state = {
       server: 'demo.wazo.community',
-      username: 'equentin@wazo.io',
-      password: 'secret',
-      number: '8008',
+      username: '',
+      password: '',
+      number: '',
       connected: false,
       ringing: false,
       inCall: false,
@@ -53,10 +53,17 @@ export default class App extends React.Component {
     // Initialise RNCallKit
     const options = {
       appName: 'WazoReactNativeDemo',
+      android: {
+        title: 'Permissions required',
+        description: 'This application needs to access your phone accounts',
+        cancelButton: 'Cancel',
+        okButton: 'ok',
+      }
     };
 
     try {
       RNCallKeep.setup(options);
+      RNCallKeep.setActive(true);
     } catch (err) {
       console.error('initializeCallKeep error:', err.message);
     }
@@ -180,6 +187,7 @@ export default class App extends React.Component {
   };
 
   onNativeCall = ({ handle }) => {
+    console.log('onNativeCall', handle);
     // Called when performing call from native Contact app
     this.call(handle);
   };
