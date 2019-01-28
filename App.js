@@ -40,6 +40,7 @@ export default class App extends React.Component {
     this.webRtcClient = null;
     this.currentCallId = null;
     this.currentSession = null;
+    this.inCall = false;
 
     this.state = {
       server: 'demo.wazo.community',
@@ -102,11 +103,11 @@ export default class App extends React.Component {
                 this.initializeWebRtc(sipLine, server);
                 this.initializeCallKeep();
               })
-              .catch(console.log);
+              .catch(console.error);
           })
-          .catch(console.log);
+          .catch(console.error);
       })
-      .catch(console.log);
+      .catch(console.error);
   };
 
   initializeWebRtc = (sipLine, host) => {
@@ -116,6 +117,7 @@ export default class App extends React.Component {
       authorizationUser: sipLine.username,
       password: sipLine.secret,
       uri: sipLine.username + '@' + host,
+      log: { builtinEnabled: true, level: 'debug'},
       media: {
         audio: true,
       },
@@ -145,6 +147,11 @@ export default class App extends React.Component {
   };
 
   call = (number) => {
+    if (this.inCall) {
+      return;
+    }
+    this.inCall = true;
+
     const session = this.webRtcClient.call(number);
     this.setupCallSession(session);
 
@@ -161,6 +168,8 @@ export default class App extends React.Component {
   };
 
   hangup = () => {
+    this.inCall = false;
+
     const currentCallId = this.getCurrentCallId();
     if (!this.currentSession || !currentCallId) {
       return;
@@ -193,6 +202,9 @@ export default class App extends React.Component {
   };
 
   onNativeCall = ({ handle }) => {
+    if (this.inCall){
+      return;
+    }
     // Called when performing call from native Contact app
     this.call(handle);
   };

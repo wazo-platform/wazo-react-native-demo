@@ -7,7 +7,7 @@
     "ios": "./node_modules/.bin/react-native run-ios"
   },
   "dependencies": {
-    "@wazo/sdk": "0.10.0",
+    "@wazo/sdk": "0.12.2",
     "react": "^16.2.0",
     "react-native": "^0.55.4",
     "react-native-callkeep": "0.0.1",
