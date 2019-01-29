@@ -80,6 +80,7 @@ export default class App extends React.Component {
     RNCallKeep.addEventListener('endCall', this.onEndCallAction);
     RNCallKeep.addEventListener('didDisplayIncomingCall', this.onIncomingCallDisplayed);
     RNCallKeep.addEventListener('didPerformSetMutedCallAction', this.onToggleMute);
+    RNCallKeep.addEventListener('didPerformDTMFAction', this.onDTMF);
   };
 
   authenticate = () => {
@@ -204,6 +205,10 @@ export default class App extends React.Component {
   onToggleMute = (muted) => {
     // Called when the system or the user mutes a call
     this.webRtcClient[muted ? 'mute' : 'unmute'](this.currentSession);
+  };
+
+  onDTMF = (action) => {
+    console.log('onDTMF', action);
   };
 
   render() {
