@@ -3927,10 +3927,10 @@ react-devtools-core@3.1.0:
     shell-quote "^1.6.1"
     ws "^2.0.3"
 
-react-native-callkeep@0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/react-native-callkeep/-/react-native-callkeep-0.0.4.tgz#7f4b1e44b95a43035077288f28da33e0310ea654"
-  integrity sha512-PGSxoDS9uENBMxB4QnmdduLi4LeeCdWcXKsvhOIYhlj6aAx5owNB1tl7YiUuuZZIDcH3tc7OV9fmOz3JMFD0CA==
+react-native-callkeep@0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/react-native-callkeep/-/react-native-callkeep-0.0.5.tgz#9847b49c459b2ebc1b6c6b8e770a4ff016ca5049"
+  integrity sha512-W25nzF3Lqf9AiGZNzvymXPuFvdnOSx7Nhn30lIYbRqgP7JQYVyZxUNblXFNKhiRkcQ84q2myH4bF+xhHaHsHEQ==
 
 react-native-webrtc@1.67.1:
   version "1.67.1"
