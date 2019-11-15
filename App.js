@@ -1,9 +1,11 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native';
 import RNCallKeep from 'react-native-callkeep';
+import getApiClient, { setCurrentServer } from '@wazo/sdk/lib/service/getApiClient';
 import uuid from 'uuid';
+import VoipPushNotification from 'react-native-voip-push-notification';
 
-import { RTCPeerConnection, RTCSessionDescription, MediaStream, getUserMedia } from 'react-native-webrtc';
+import { RTCPeerConnection, RTCSessionDescription, MediaStream, mediaDevices } from 'react-native-webrtc';
 
 import { WazoApiClient, WazoWebRTCClient } from '@wazo/sdk';
 
@@ -13,7 +15,7 @@ global.RTCSessionDescription = RTCSessionDescription;
 global.RTCPeerConnection = RTCPeerConnection;
 global.navigator.mediaDevices = {
   ...global.navigator.mediaDevices,
-  getUserMedia: getUserMedia,
+  getUserMedia: mediaDevices.getUserMedia,
 };
 
 const styles = StyleSheet.create({
@@ -27,15 +29,22 @@ const styles = StyleSheet.create({
     width: '80%',
   },
   button: {
-    paddingTop: 50,
+    marginTop: 50,
   },
 });
 const hitSlop = { top: 10, left: 10, right: 10, bottom: 10};
+
+let apnsToken;
 
 export default class App extends React.Component {
 
   constructor(props) {
     super(props);
+
+    VoipPushNotification.requestPermissions();
+    VoipPushNotification.addEventListener('register', async (token) => {
+      apnsToken = token;
+    });
 
     this.webRtcClient = null;
     this.currentCallId = null;
@@ -49,11 +58,15 @@ export default class App extends React.Component {
       connected: false,
       ringing: false,
       inCall: false,
+      held: false,
       error: null,
     };
   }
 
-  initializeCallKeep = () => {
+  initializeCallKeep = async (userUuid) => {
+     await this.apiClient.auth.removeDeviceToken(userUuid);
+     this.apiClient.auth.sendDeviceToken(userUuid, null, apnsToken);
+
     // Initialise RNCallKit
     const options = {
       ios: {
@@ -69,7 +82,7 @@ export default class App extends React.Component {
 
     try {
       RNCallKeep.setup(options);
-      RNCallKeep.setActive(true);
+      RNCallKeep.setAvailable(true);
     } catch (err) {
       console.error('initializeCallKeep error:', err.message);
     }
@@ -85,23 +98,24 @@ export default class App extends React.Component {
 
   authenticate = () => {
     const { server, username, password } = this.state;
-    const apiClient = new WazoApiClient({ server });
+    setCurrentServer(server);
+    this.apiClient = getApiClient();
 
-    apiClient.auth
+    this.apiClient.auth
       .logIn({ username, password })
       .then(data => {
-        const userToken = data.token;
+        this.apiClient.setToken(data.token);
 
-        apiClient.confd
-          .getUser(userToken, data.uuid)
+        this.apiClient.confd
+          .getUser(data.uuid)
           .then(user => {
             const line = user.lines[0];
 
-            apiClient.confd
-              .getUserLineSip(data.token, data.uuid, line.id)
+            this.apiClient.confd
+              .getUserLineSip(data.uuid, line.id)
               .then(sipLine => {
                 this.initializeWebRtc(sipLine, server);
-                this.initializeCallKeep();
+                this.initializeCallKeep(data.uuid);
               })
               .catch(console.log);
           })
@@ -157,6 +171,7 @@ export default class App extends React.Component {
 
   answer = () => {
     this.setState({ inCall: true, ringing: false });
+    RNCallKeep.setCurrentCallActive();
 
     this.webRtcClient.answer(this.currentSession);
   };
@@ -188,14 +203,25 @@ export default class App extends React.Component {
     this.answer();
   };
 
-  onIncomingCallDisplayed = error => {
+  onIncomingCallDisplayed = ({ callUUID, handle, fromPushKit }) => {
+    console.log('onIncomingCallDisplayed', callUUID);
     // You will get this event after RNCallKeep finishes showing incoming call UI
     // You can check if there was an error while displaying
   };
 
   onNativeCall = ({ handle }) => {
+    // _onOutGoingCall on android is also called when making a call from the app
+    // so we have to check in order to not making 2 calls
+    if (this.state.inCall) {
+      return;
+    }
     // Called when performing call from native Contact app
     this.call(handle);
+  };
+
+  toggleHold = () => {
+    this.webRtcClient[this.state.held ? 'unhold' : 'hold'](this.currentSession);
+    this.setState({ held: !this.state.held });
   };
 
   onEndCallAction = ({ callUUID }) => {
@@ -251,9 +277,14 @@ export default class App extends React.Component {
               </TouchableOpacity>
             )}
             {this.state.inCall && (
-              <TouchableOpacity onPress={this.hangup} style={styles.button} hitSlop={hitSlop}>
-                <Text>Hangup</Text>
-              </TouchableOpacity>
+              <React.Fragment>
+                <TouchableOpacity onPress={this.hangup} style={styles.button} hitSlop={hitSlop}>
+                  <Text>Hangup</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={this.toggleHold} style={styles.button} hitSlop={hitSlop}>
+                  <Text>{this.state.held ? 'Unhold' : 'Hold' }</Text>
+                </TouchableOpacity>
+              </React.Fragment>
             )}
           </React.Fragment>
         )}

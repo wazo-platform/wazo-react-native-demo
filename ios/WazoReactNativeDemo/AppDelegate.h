@@ -6,8 +6,11 @@
  */
 
 #import <UIKit/UIKit.h>
+#import <PushKit/PushKit.h>
+#import <UserNotifications/UserNotifications.h>
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+@import UserNotifications;
+@interface AppDelegate : UIResponder <PKPushRegistryDelegate, UNUserNotificationCenterDelegate>
 
 @property (nonatomic, strong) UIWindow *window;
 
