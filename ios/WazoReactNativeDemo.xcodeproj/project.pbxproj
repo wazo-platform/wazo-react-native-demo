@@ -423,16 +423,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3204A8B8217DC4D60042B629 /* GLKit.framework in Frameworks */,
+				3204A8B6217DC4D10042B629 /* CoreGraphics.framework in Frameworks */,
+				3204A8BE217DC4E50042B629 /* VideoToolbox.framework in Frameworks */,
+				3204A8BC217DC4E00042B629 /* CoreVideo.framework in Frameworks */,
 				329E6A5C21D66F4000131D66 /* libRNCallKeep.a in Frameworks */,
 				327D384321D51EC800F073E7 /* Intents.framework in Frameworks */,
 				327D383A21D51E9F00F073E7 /* CallKit.framework in Frameworks */,
 				3204A8C2217DC4F30042B629 /* libsqlite3.tbd in Frameworks */,
 				3204A8C0217DC4ED0042B629 /* libc.tbd in Frameworks */,
-				3204A8BE217DC4E50042B629 /* VideoToolbox.framework in Frameworks */,
-				3204A8BC217DC4E00042B629 /* CoreVideo.framework in Frameworks */,
 				3204A8BA217DC4DB0042B629 /* CoreAudio.framework in Frameworks */,
-				3204A8B8217DC4D60042B629 /* GLKit.framework in Frameworks */,
-				3204A8B6217DC4D10042B629 /* CoreGraphics.framework in Frameworks */,
 				3204A8B4217DC4CA0042B629 /* AudioToolbox.framework in Frameworks */,
 				3204A8B2217DC4C20042B629 /* AVFoundation.framework in Frameworks */,
 				3204A8B0217DC4B30042B629 /* libRCTWebRTC.a in Frameworks */,
