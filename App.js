@@ -1,11 +1,13 @@
 import React from 'react';
-import { StyleSheet, Text, ScrollView, TouchableOpacity, TextInput, Platform } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native';
 import RNCallKeep from 'react-native-callkeep';
+import getApiClient, { setCurrentServer } from '@wazo/sdk/lib/service/getApiClient';
 import uuid from 'uuid';
+import VoipPushNotification from 'react-native-voip-push-notification';
 
-import { RTCPeerConnection, RTCSessionDescription, MediaStream, getUserMedia, RTCView, MediaStreamTrack } from 'react-native-webrtc';
+import { RTCPeerConnection, RTCSessionDescription, MediaStream, mediaDevices } from 'react-native-webrtc';
 
-import { WazoApiClient, WazoWebRTCClient } from '@wazo/sdk';
+import WazoWebRTCClient from '@wazo/sdk/lib/web-rtc-client';
 
 // Polyfill WebRTC
 global.MediaStream = MediaStream;
@@ -13,16 +15,13 @@ global.RTCSessionDescription = RTCSessionDescription;
 global.RTCPeerConnection = RTCPeerConnection;
 global.navigator.mediaDevices = {
   ...global.navigator.mediaDevices,
-  getUserMedia: getUserMedia,
+  getUserMedia: mediaDevices.getUserMedia,
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
-    backgroundColor: '#fff'
-  },
-  containerContent: {
     flex: 1,
+    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -30,23 +29,22 @@ const styles = StyleSheet.create({
     width: '80%',
   },
   button: {
-    paddingTop: 50,
-  },
-  localVideo: {
-    width: 200,
-    height: 150,
-  },
-  remoteVideo: {
-    width: 200,
-    height: 150,
+    marginTop: 50,
   },
 });
 const hitSlop = { top: 10, left: 10, right: 10, bottom: 10};
+
+let apnsToken;
 
 export default class App extends React.Component {
 
   constructor(props) {
     super(props);
+
+    // VoipPushNotification.requestPermissions();
+    // VoipPushNotification.addEventListener('register', async (token) => {
+    //   apnsToken = token;
+    // });
 
     this.webRtcClient = null;
     this.currentCallId = null;
@@ -54,19 +52,23 @@ export default class App extends React.Component {
 
     this.state = {
       server: 'demo.wazo.community',
-      username: '',
+      username: 'equentin@wazo.io',
       password: '',
-      number: '',
+      number: '8008',
       localVideoSrc: null,
       remoteVideoSrc: null,
       connected: false,
       ringing: false,
       inCall: false,
+      held: false,
       error: null,
     };
   }
 
-  initializeCallKeep = () => {
+  initializeCallKeep = async (userUuid) => {
+     await this.apiClient.auth.removeDeviceToken(userUuid);
+     this.apiClient.auth.sendDeviceToken(userUuid, null, apnsToken);
+
     // Initialise RNCallKit
     const options = {
       ios: {
@@ -82,7 +84,7 @@ export default class App extends React.Component {
 
     try {
       RNCallKeep.setup(options);
-      RNCallKeep.setActive(true);
+      RNCallKeep.setAvailable(true);
     } catch (err) {
       console.error('initializeCallKeep error:', err.message);
     }
@@ -98,23 +100,24 @@ export default class App extends React.Component {
 
   authenticate = () => {
     const { server, username, password } = this.state;
-    const apiClient = new WazoApiClient({ server });
+    setCurrentServer(server);
+    this.apiClient = getApiClient();
 
-    apiClient.auth
+    this.apiClient.auth
       .logIn({ username, password })
       .then(data => {
-        const userToken = data.token;
+        this.apiClient.setToken(data.token);
 
-        apiClient.confd
-          .getUser(userToken, data.uuid)
+        this.apiClient.confd
+          .getUser(data.uuid)
           .then(user => {
             const line = user.lines[0];
 
-            apiClient.confd
-              .getUserLineSip(data.token, data.uuid, line.id)
+            this.apiClient.confd
+              .getUserLineSip(data.uuid, line.id)
               .then(sipLine => {
                 this.initializeWebRtc(sipLine, server);
-                this.initializeCallKeep();
+                this.initializeCallKeep(data.uuid);
               })
               .catch(console.log);
           })
@@ -129,37 +132,28 @@ export default class App extends React.Component {
       return;
     }
 
-    MediaStreamTrack.getSources(sourceInfos => {
-      for (const i = 0; i < sourceInfos.length; i++) {
-        const sourceInfo = sourceInfos[i];
-        if(sourceInfo.kind === 'video' && sourceInfo.facing === 'front') {
-          return sourceInfo.id;
-        }
-      }
-    });
+    // MediaStreamTrack.getSources(sourceInfos => {
+    //   for (let i = 0; i < sourceInfos.length; i++) {
+    //     const sourceInfo = sourceInfos[i];
+    //     if(sourceInfo.kind === 'video' && sourceInfo.facing === 'front') {
+    //       return sourceInfo.id;
+    //     }
+    //   }
+    // });
   };
 
   initializeWebRtc = (sipLine, host) => {
-    const videoSourceId = this.getVideoSourceId();
-
     this.webRtcClient = new WazoWebRTCClient({
       host,
-      displayName: 'My react-native dialer',
+      displayName: 'My dialer',
       authorizationUser: sipLine.username,
       password: sipLine.secret,
       uri: sipLine.username + '@' + host,
+      log: { builtinEnabled: true, },
       media: {
         audio: true,
-        video: {
-          mandatory: {
-            minWidth: 640, // Provide your own width, height and frame rate here
-            minHeight: 360,
-            minFrameRate: 30,
-          },
-          facingMode: 'environment',
-          optional: (videoSourceId ? [ {sourceId: videoSourceId} ] : []),
-        }
       },
+      iceCheckingTimeout: 5000,
     });
 
     this.webRtcClient.on('invite', session => {
@@ -180,23 +174,6 @@ export default class App extends React.Component {
       this.setState({ error: cause, ringing: false, inCall: false });
     });
 
-    session.on('SessionDescriptionHandler-created', (sdh) => {
-      sdh.on('userMedia', (stream) => {
-        this.setState({ localVideoSrc: stream.toURL() });
-      });
-
-      sdh.on('addStream', (event) => {
-        const { stream } = event;
-        const tracks = stream.getTracks();
-
-        if (tracks.length === 1 && tracks[0].kind === 'video') {
-          this.setState({ remoteVideoSrc: stream.toURL() });
-        } else if(tracks.length === 2) {
-          this.setState({ remoteVideoSrc: stream.toURL() });
-        }
-      });
-    });
-
     session.on('terminated', () => {
       this.hangup();
     });
@@ -208,12 +185,13 @@ export default class App extends React.Component {
 
     this.setState({ inCall: true, ringing: false });
 
-    // Tell callkeep that we are in call
+    // Tell callkit that we are in call
     RNCallKeep.startCall(this.getCurrentCallId(), number);
   };
 
   answer = () => {
     this.setState({ inCall: true, ringing: false });
+    RNCallKeep.setCurrentCallActive();
 
     this.webRtcClient.answer(this.currentSession);
   };
@@ -226,7 +204,7 @@ export default class App extends React.Component {
 
     this.webRtcClient.hangup(this.currentSession);
 
-    RNCallKeep.endCall(currentCallId);
+    // RNCallKeep.endCall(currentCallId);
     this.setState({ inCall: false, ringing: false });
     this.currentCallId = null;
     this.currentSession = null;
@@ -245,14 +223,25 @@ export default class App extends React.Component {
     this.answer();
   };
 
-  onIncomingCallDisplayed = error => {
+  onIncomingCallDisplayed = ({ callUUID, handle, fromPushKit }) => {
+    console.log('onIncomingCallDisplayed', callUUID);
     // You will get this event after RNCallKeep finishes showing incoming call UI
     // You can check if there was an error while displaying
   };
 
   onNativeCall = ({ handle }) => {
+    // _onOutGoingCall on android is also called when making a call from the app
+    // so we have to check in order to not making 2 calls
+    if (this.state.inCall) {
+      return;
+    }
     // Called when performing call from native Contact app
     this.call(handle);
+  };
+
+  toggleHold = () => {
+    this.webRtcClient[this.state.held ? 'unhold' : 'hold'](this.currentSession);
+    this.setState({ held: !this.state.held });
   };
 
   onEndCallAction = ({ callUUID }) => {
@@ -272,7 +261,7 @@ export default class App extends React.Component {
     const { connected, server } = this.state;
 
     return (
-      <ScrollView style={styles.container} contentContainerStyle={styles.containerContent} keyboardShouldPersistTaps="handled">
+      <View style={styles.container}>
         {!connected && (
           <React.Fragment>
             <TextInput autoCapitalize="none" onChangeText={username => this.setState({ username })} placeholder="Username" value={this.state.username} style={styles.input} />
@@ -287,12 +276,8 @@ export default class App extends React.Component {
 
         {connected && (
           <React.Fragment>
-            <RTCView streamURL={this.state.localVideoSrc} style={styles.localVideo} />
-
-            <RTCView streamURL={this.state.remoteVideoSrc} style={styles.remoteVideo} />
             <TextInput
               autoCapitalize="none"
-              keyboardType="numeric"
               onChangeText={number => this.setState({ number })}
               onSubmitEditing={this.call.bind(this)}
               placeholder="Number"
@@ -311,13 +296,19 @@ export default class App extends React.Component {
               </TouchableOpacity>
             )}
             {this.state.inCall && (
-              <TouchableOpacity onPress={this.hangup} style={styles.button} hitSlop={hitSlop}>
-                <Text>Hangup</Text>
-              </TouchableOpacity>
+              <React.Fragment>
+                <TouchableOpacity onPress={this.hangup} style={styles.button} hitSlop={hitSlop}>
+                  <Text>Hangup</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={this.toggleHold} style={styles.button} hitSlop={hitSlop}>
+                  <Text>{this.state.held ? 'Unhold' : 'Hold' }</Text>
+                </TouchableOpacity>
+              </React.Fragment>
             )}
           </React.Fragment>
         )}
-      </ScrollView>
+      </View>
     );
   }
+
 }
