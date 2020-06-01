@@ -86,7 +86,11 @@ const Login = ({ defaultUsername = '', defaultPassword = '', defaultServer = '',
     Wazo.Auth.setHost(host);
 
     const session = await Wazo.Auth.validateToken(token);
-    authenticationSuccess(session, host);
+    if (session) {
+      return authenticationSuccess(session, host);
+    }
+
+    setAuthenticating(false);
   };
 
   const login = async () => {
@@ -107,8 +111,6 @@ const Login = ({ defaultUsername = '', defaultPassword = '', defaultServer = '',
   };
 
   const authenticationSuccess = async (session, host) => {
-    console.log('sending apnsToken', apnsToken);
-
     await AsyncStorage.setItem('host', host);
     await AsyncStorage.setItem('token', session.token);
 

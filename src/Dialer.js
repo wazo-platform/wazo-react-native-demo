@@ -1,5 +1,5 @@
 import React, { useReducer, useEffect } from 'react';
-import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, Platform } from 'react-native';
 import RNCallKeep from 'react-native-callkeep';
 import ramdomUuid from 'uuid-random';
 import {Container, Content, Form, Input, Item, Label, Button, Footer } from 'native-base';
@@ -61,6 +61,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+
+const isIOS = Platform.OS === 'ios';
 
 const reducer = (state, action) => ({ ...state, ...action});
 const initialState = {
@@ -172,8 +174,10 @@ const Dialer = ({ onLogout }) => {
       // Setup local stream
       if (callSession.cameraEnabled) {
         const { peerConnection } = session.sessionDescriptionHandler;
-        localStream = peerConnection.getLocalStreams()[0];
+        localStream = peerConnection.getLocalStreams().find(stream => !!stream.getVideoTracks().length);
         remoteStream = peerConnection.getRemoteStreams().find(stream => !!stream.getVideoTracks().length);
+
+        console.log('localStream', localStream.toURL());
 
         dispatch({
           localStreamURL: localStream ? localStream.toURL() : null,
@@ -285,9 +289,13 @@ const Dialer = ({ onLogout }) => {
     init();
   }, []);
 
+  console.log('localStreamURL', localStreamURL);
+
   return (
     <Container style={styles.content}>
-      {remoteStreamURL && <RTCView objectFit="cover" streamURL={remoteStreamURL} style={styles.remoteVideo} />}
+      {!isIOS && localStreamURL && (<RTCView mirror streamURL={localStreamURL} style={styles.localVideo} zOrder={1} />)}
+
+      {remoteStreamURL && <RTCView objectFit="cover" streamURL={remoteStreamURL} style={styles.remoteVideo} zOrder={15} />}
 
       <Content style={styles.content}>
         <Form style={styles.form}>
@@ -331,13 +339,12 @@ const Dialer = ({ onLogout }) => {
           </View>
         )}
       </Content>
+      {isIOS && localStreamURL && (<RTCView mirror streamURL={localStreamURL} style={styles.localVideo} zOrder={1} />)}
       <Footer>
         <Button transparent onPress={logout}>
           <Text>Logout</Text>
         </Button>
       </Footer>
-
-      {localStreamURL && <RTCView mirror streamURL={localStreamURL} style={styles.localVideo} zOrder={3} />}
     </Container>
   );
 };
