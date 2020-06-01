@@ -15,3 +15,10 @@ To fix glog build.
 cd node_modules/react-native/third-party/glog-0.3.4
 sh ../../scripts/ios-configure-glog.sh
 ```
+
+#### WebRTC.framework/WebRTC' does not contain bitcode.
+
+Run :
+```sh
+yarn download-webrtc-bitecode
+```

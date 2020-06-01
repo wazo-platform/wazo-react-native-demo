@@ -1,0 +1,19 @@
+import React, { useState } from 'react';
+
+import Login from './Login';
+import Dialer from './Dialer';
+
+const defaultUsername = 'equentin@wazo.io';
+const defaultServer = 'demo.wazo.community';
+
+const App = () => {
+  const [session, setSession] = useState(null);
+
+  if (!session) {
+    return <Login defaultServer={defaultServer} defaultUsername={defaultUsername} onLogin={setSession} />;
+  }
+
+  return <Dialer onLogout={() => setSession(null)} />;
+};
+
+export default App;
