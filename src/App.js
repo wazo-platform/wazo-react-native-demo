@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Login from './Login';
 import Dialer from './Dialer';
 
-const defaultUsername = 'equentin@wazo.io';
+const defaultUsername = '';
 const defaultServer = 'demo.wazo.community';
 
 const App = () => {

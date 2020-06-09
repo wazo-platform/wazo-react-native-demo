@@ -77,6 +77,8 @@ const initialState = {
   remoteStreamURL: null,
 };
 
+let incomingCallSession;
+
 const Dialer = ({ onLogout }) => {
   const [ state, dispatch ] = useReducer(reducer, initialState);
   const { currentSession, number, ringing, inCall, held, localStreamURL, remoteStreamURL, ready } = state;
@@ -104,12 +106,13 @@ const Dialer = ({ onLogout }) => {
     await Wazo.Phone.connect({ audio: true, video: true });
 
     Wazo.Phone.on(Wazo.Phone.ON_CALL_INCOMING, callSession => {
+      incomingCallSession = callSession;
       setupCallSession(callSession);
       dispatch({ ringing: true, currentSession: callSession });
 
-      // Tell callkeep that we a call is incoming
+      // Tell callkeep that we a call is incoming for audio calls
       const { number } = callSession;
-      // RNCallKeep.displayIncomingCall(getCurrentCallId(), number, number, 'number', callSession.cameraEnabled);
+      RNCallKeep.displayIncomingCall(getCurrentCallId(), number, number, 'number', true);
     });
   };
 
@@ -177,8 +180,6 @@ const Dialer = ({ onLogout }) => {
         localStream = peerConnection.getLocalStreams().find(stream => !!stream.getVideoTracks().length);
         remoteStream = peerConnection.getRemoteStreams().find(stream => !!stream.getVideoTracks().length);
 
-        console.log('localStream', localStream.toURL());
-
         dispatch({
           localStreamURL: localStream ? localStream.toURL() : null,
           remoteStreamURL: remoteStream ? remoteStream.toURL() : null,
@@ -193,29 +194,32 @@ const Dialer = ({ onLogout }) => {
 
     dispatch({ inCall: true, ringing: false });
 
-    // Tell callkeep that we are in call
-    // RNCallKeep.startCall(getCurrentCallId(), number, number, 'number', video);
+    RNCallKeep.startCall(getCurrentCallId(), number, number, 'number', video);
   };
 
   const answer = () => {
     dispatch({ inCall: true, ringing: false });
     RNCallKeep.setCurrentCallActive();
 
-    Wazo.Phone.accept(currentSession, currentSession.cameraEnabled);
+    // When answering from callkeep, we don't have yet the callSession from the state.
+    const session = currentSession || incomingCallSession;
+
+    Wazo.Phone.accept(session, session.cameraEnabled);
   };
 
   const hangup = () => {
     const currentCallId = getCurrentCallId();
-    if (!currentSession || !currentCallId) {
+    const session = currentSession || incomingCallSession;
+    if (!session || !currentCallId) {
       return;
     }
 
-    Wazo.Phone.hangup(currentSession);
+    Wazo.Phone.hangup(session);
 
     onCallTerminated();
   };
 
-  const onCallTerminated = currentCallId => {
+  const onCallTerminated = () => {
     if (currentCallId) {
       RNCallKeep.endCall(currentCallId);
     }
@@ -237,17 +241,27 @@ const Dialer = ({ onLogout }) => {
       localStream = null;
     }
 
+    incomingCallSession = null;
+    currentCallId = null;
+
     displayLocalVideo();
   };
 
   const onAnswerCallAction = ({ callUUID }) => {
     // called when the user answer the incoming call
     answer();
+
+    RNCallKeep.setCurrentCallActive(callUUID);
+    const session = currentSession || incomingCallSession;
+
+    // On Android display the app when answering a video call
+    if (!isIOS && session.cameraEnabled) {
+      RNCallKeep.backToForeground();
+    }
   };
 
   const onIncomingCallDisplayed = ({ callUUID, handle, fromPushKit }) => {
-    // You will get this event after RNCallKeep finishes showing incoming call UI
-    // You can check if there was an error while displaying
+    // Incoming call displayed (used for pushkit on iOS)
   };
 
   const onNativeCall = ({ handle }) => {
@@ -288,8 +302,6 @@ const Dialer = ({ onLogout }) => {
   useEffect(() => {
     init();
   }, []);
-
-  console.log('localStreamURL', localStreamURL);
 
   return (
     <Container style={styles.content}>
