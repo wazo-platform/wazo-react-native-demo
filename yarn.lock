@@ -6224,9 +6224,10 @@ react-is@^16.12.0, react-is@^16.8.1, react-is@^16.8.4, react-is@^16.9.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
-"react-native-callkeep@https://github.com/nimbleape/react-native-callkeep-1.git#allow-non-numbers-and-android-video":
+react-native-callkeep@3.0.13:
   version "3.0.13"
-  resolved "https://github.com/nimbleape/react-native-callkeep-1.git#aaf508332ff0855f500bd522779ef87884b59621"
+  resolved "https://registry.yarnpkg.com/react-native-callkeep/-/react-native-callkeep-3.0.13.tgz#30200e0da7d5385cd630758f8e21daf5d4f02ca5"
+  integrity sha512-md07EklJQkrh5ImMxFk17nc8qQxj675c5OKmdyi2yEf4GmPB0xUOOPWyf8/WWutRRUCw/wvv355d8ScecQ4PvA==
 
 react-native-drawer@2.5.1:
   version "2.5.1"

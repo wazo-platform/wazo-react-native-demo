@@ -20,7 +20,7 @@
     "react": "~16.9.0",
     "react-dom": "~16.9.0",
     "react-native": "~0.61.5",
-    "react-native-callkeep": "https://github.com/nimbleape/react-native-callkeep-1.git#allow-non-numbers-and-android-video",
+    "react-native-callkeep": "3.0.13",
     "react-native-gesture-handler": "~1.6.0",
     "react-native-permissions": "^2.1.5",
     "react-native-reanimated": "~1.7.0",

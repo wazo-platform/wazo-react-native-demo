@@ -67,7 +67,6 @@ const isIOS = Platform.OS === 'ios';
 const reducer = (state, action) => ({ ...state, ...action});
 const initialState = {
   ready: false,
-  currentSession: null,
   number: '8008',
   ringing: false,
   inCall: false,
@@ -77,11 +76,12 @@ const initialState = {
   remoteStreamURL: null,
 };
 
-let incomingCallSession;
+// Can't be put in react state or it won't be updated in callkeep events.
+let currentSession;
 
 const Dialer = ({ onLogout }) => {
   const [ state, dispatch ] = useReducer(reducer, initialState);
-  const { currentSession, number, ringing, inCall, held, localStreamURL, remoteStreamURL, ready } = state;
+  const { number, ringing, inCall, held, localStreamURL, remoteStreamURL, ready } = state;
   let currentCallId;
   let localStream;
   let remoteStream;
@@ -106,9 +106,9 @@ const Dialer = ({ onLogout }) => {
     await Wazo.Phone.connect({ audio: true, video: true });
 
     Wazo.Phone.on(Wazo.Phone.ON_CALL_INCOMING, callSession => {
-      incomingCallSession = callSession;
       setupCallSession(callSession);
-      dispatch({ ringing: true, currentSession: callSession });
+      currentSession = callSession;
+      dispatch({ ringing: true });
 
       // Tell callkeep that we a call is incoming for audio calls
       const { number } = callSession;
@@ -162,7 +162,7 @@ const Dialer = ({ onLogout }) => {
   };
 
   const setupCallSession = callSession => {
-    dispatch({ currentSession:  callSession });
+    currentSession = callSession;
 
     Wazo.Phone.on(Wazo.Phone.ON_CALL_FAILED, (response, cause) => {
       dispatch({ error: cause, ringing: false, inCall: false });
@@ -197,24 +197,24 @@ const Dialer = ({ onLogout }) => {
     RNCallKeep.startCall(getCurrentCallId(), number, number, 'number', video);
   };
 
-  const answer = () => {
+  const answer = withVideo => {
     dispatch({ inCall: true, ringing: false });
     RNCallKeep.setCurrentCallActive();
 
-    // When answering from callkeep, we don't have yet the callSession from the state.
-    const session = currentSession || incomingCallSession;
-
-    Wazo.Phone.accept(session, session.cameraEnabled);
+    Wazo.Phone.accept(currentSession, withVideo);
   };
 
-  const hangup = () => {
+  const hangup = async () => {
     const currentCallId = getCurrentCallId();
-    const session = currentSession || incomingCallSession;
-    if (!session || !currentCallId) {
+    if (!currentSession || !currentCallId) {
       return;
     }
 
-    Wazo.Phone.hangup(session);
+    try {
+      await Wazo.Phone.hangup(currentSession);
+    } catch (e) {
+      // Nothing to do
+    }
 
     onCallTerminated();
   };
@@ -227,7 +227,6 @@ const Dialer = ({ onLogout }) => {
       inCall: false,
       ringing: false,
       currentCallId: null,
-      currentSession: null,
       remoteStreamURL: null,
       localStreamURL: null,
     });
@@ -241,21 +240,20 @@ const Dialer = ({ onLogout }) => {
       localStream = null;
     }
 
-    incomingCallSession = null;
     currentCallId = null;
+    currentSession = null;
 
     displayLocalVideo();
   };
 
   const onAnswerCallAction = ({ callUUID }) => {
     // called when the user answer the incoming call
-    answer();
+    answer(true);
 
     RNCallKeep.setCurrentCallActive(callUUID);
-    const session = currentSession || incomingCallSession;
 
     // On Android display the app when answering a video call
-    if (!isIOS && session.cameraEnabled) {
+    if (!isIOS && currentSession.cameraEnabled) {
       RNCallKeep.backToForeground();
     }
   };
@@ -333,11 +331,18 @@ const Dialer = ({ onLogout }) => {
           </View>
         )}
         {ringing && (
-          <Button onPress={answer} style={styles.button}>
-            <Text style={styles.centeredText}>
-              Answer {currentSession.cameraEnabled ? 'video': 'audio'} call from {currentSession.number}
-              </Text>
-          </Button>
+          <View style={styles.buttonsContainer}>
+            <Button onPress={() => answer(false)} style={styles.button}>
+              <Text style={styles.centeredText}>
+                Answer audio call from {currentSession.number}
+                </Text>
+            </Button>
+            <Button onPress={() => answer(true)} style={styles.button}>
+              <Text style={styles.centeredText}>
+                Answer video call from {currentSession.number}
+                </Text>
+            </Button>
+          </View>
         )}
 
         {inCall && (
