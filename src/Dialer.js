@@ -184,6 +184,11 @@ const Dialer = ({ onLogout }) => {
           localStreamURL: localStream ? localStream.toURL() : null,
           remoteStreamURL: remoteStream ? remoteStream.toURL() : null,
         });
+
+        // On Android display the app when answering a video call
+        if (!isIOS) {
+          RNCallKeep.backToForeground();
+        }
       }
     });
   };
