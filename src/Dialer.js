@@ -67,7 +67,7 @@ const isIOS = Platform.OS === 'ios';
 const reducer = (state, action) => ({ ...state, ...action});
 const initialState = {
   ready: false,
-  number: '8008',
+  number: '',
   ringing: false,
   inCall: false,
   held: false,
