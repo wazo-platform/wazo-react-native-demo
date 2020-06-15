@@ -40,6 +40,7 @@ target 'WazoReactNativeDemo' do
   # Other native modules
   pod 'Permission-Contacts', :path => "#{permissions_path}/Contacts.podspec"
   pod 'Permission-Microphone', :path => "#{permissions_path}/Microphone.podspec"
+  pod 'Permission-Camera', :path => "#{permissions_path}/Camera.podspec"
   pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications.podspec"
   pod 'react-native-webrtc', :path => "../node_modules/react-native-webrtc"
   pod 'RNVoipPushNotification', :path => "../node_modules/react-native-voip-push-notification"

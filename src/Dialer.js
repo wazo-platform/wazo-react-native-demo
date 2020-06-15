@@ -331,7 +331,6 @@ const Dialer = ({ onLogout }) => {
              autoCapitalize="none"
              onChangeText={value => dispatch({ number: value })}
              value={number}
-             onSubmitEditing={call}
            />
          </Item>
         </Form>
