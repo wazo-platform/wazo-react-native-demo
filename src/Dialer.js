@@ -71,6 +71,7 @@ const initialState = {
   ringing: false,
   inCall: false,
   held: false,
+  videoHeld: false,
   error: null,
   localStreamURL: null,
   remoteStreamURL: null,
@@ -81,7 +82,7 @@ let currentSession;
 
 const Dialer = ({ onLogout }) => {
   const [ state, dispatch ] = useReducer(reducer, initialState);
-  const { number, ringing, inCall, held, localStreamURL, remoteStreamURL, ready } = state;
+  const { number, ringing, inCall, held, localStreamURL, remoteStreamURL, ready, videoHeld } = state;
   let currentCallId;
   let localStream;
   let remoteStream;
@@ -282,6 +283,11 @@ const Dialer = ({ onLogout }) => {
     dispatch({ held: !held });
   };
 
+  const toggleVideoHold = () => {
+    Wazo.Phone[videoHeld ? 'turnCameraOn' : 'turnCameraOff'](currentSession);
+    dispatch({ videoHeld: !videoHeld });
+  };
+
   const onEndCallAction = ({ callUUID }) => {
     hangup();
   };
@@ -296,6 +302,9 @@ const Dialer = ({ onLogout }) => {
   };
 
   const logout = async () => {
+    if (currentSession) {
+      await hangup();
+    }
     Wazo.Auth.logout();
     await AsyncStorage.removeItem('token');
 
@@ -305,6 +314,8 @@ const Dialer = ({ onLogout }) => {
   useEffect(() => {
     init();
   }, []);
+
+  const isVideo = currentSession && currentSession.cameraEnabled;
 
   return (
     <Container style={styles.content}>
@@ -358,6 +369,11 @@ const Dialer = ({ onLogout }) => {
             <Button block onPress={toggleHold} style={styles.button}>
               <Text>{held ? 'Unhold' : 'Hold' }</Text>
             </Button>
+            {isVideo && (
+              <Button block onPress={toggleVideoHold} style={styles.button}>
+                <Text>{videoHeld ? 'Camera On' : 'Camera Off' }</Text>
+              </Button>
+            )}
           </View>
         )}
       </Content>

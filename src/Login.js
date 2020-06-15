@@ -56,6 +56,7 @@ const Login = ({ defaultUsername = '', defaultPassword = '', defaultServer = '',
 
     if (isIOS) {
       await request( PERMISSIONS.IOS.MICROPHONE);
+      await request( PERMISSIONS.IOS.CAMERA);
       VoipPushNotification.requestPermissions();
       VoipPushNotification.addEventListener('register', async (token) => {
         apnsToken = token;
@@ -65,6 +66,7 @@ const Login = ({ defaultUsername = '', defaultPassword = '', defaultServer = '',
       await request(PERMISSIONS.ANDROID.READ_PHONE_STATE);
       await request(PERMISSIONS.ANDROID.CALL_PHONE);
       await request(PERMISSIONS.ANDROID.RECORD_AUDIO);
+      await request(PERMISSIONS.ANDROID.CAMERA);
     }
 
     authenticateFromToken();

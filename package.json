@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.11.0",
-    "@wazo/sdk": "^0.32.6",
+    "@wazo/sdk": "0.32.13",
     "expo": "~37.0.3",
     "expo-splash-screen": "^0.2.3",
     "expo-updates": "~0.2.0",

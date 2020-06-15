@@ -1610,10 +1610,10 @@
     lodash "^4.5.0"
     prop-types "^15.6.1"
 
-"@wazo/sdk@^0.32.6":
-  version "0.32.6"
-  resolved "https://registry.yarnpkg.com/@wazo/sdk/-/sdk-0.32.6.tgz#1f13688305b16ec624c5ca574cfa09371848ea68"
-  integrity sha512-UeuE5zkrVseNFXWZYEt2bFZn+imtNLDb1yHhq3wTx/1WcToDX2GZ44VWXC2zpFW/gAm5YLdN5J4el7QIOr1mMw==
+"@wazo/sdk@0.32.13":
+  version "0.32.13"
+  resolved "https://registry.yarnpkg.com/@wazo/sdk/-/sdk-0.32.13.tgz#db5cc5f2e023d9d2d151e07da89ce0377858fb13"
+  integrity sha512-U8DVGGTNJlIZFnRricb1d5lNkfvcQQDiBk2+oWRX6awrwUD2thVToQhz7huOAiV40z106pzaPxkiGM8zyW+Mrg==
   dependencies:
     events "^3.1.0"
     fstream "^1.0.12"
