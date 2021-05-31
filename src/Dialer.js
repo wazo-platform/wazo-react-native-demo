@@ -315,11 +315,17 @@ const Dialer = ({ onLogout }) => {
   };
 
   const toggleHold = shouldHold => {
+    if (!currentSession) {
+      return;
+    }
     Wazo.Phone[shouldHold ? 'hold' : 'resume'](currentSession);
     dispatch({ held: shouldHold });
   };
 
   const toggleVideoHold = () => {
+    if (!currentSession) {
+      return;
+    }
     Wazo.Phone[videoHeld ? 'turnCameraOn' : 'turnCameraOff'](currentSession);
     dispatch({ videoHeld: !videoHeld });
   };
@@ -329,6 +335,9 @@ const Dialer = ({ onLogout }) => {
   };
 
   const onToggleMute = (muted) => {
+    if (!currentSession) {
+      return;
+    }
     // Called when the system or the user mutes a call
     Wazo.Phone[muted ? 'mute' : 'unmute'](currentSession);
   };
