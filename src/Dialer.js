@@ -164,6 +164,7 @@ const Dialer = ({ onLogout }) => {
     RNCallKeep.addEventListener('didDisplayIncomingCall', onIncomingCallDisplayed);
     RNCallKeep.addEventListener('didPerformSetMutedCallAction', onToggleMute);
     RNCallKeep.addEventListener('didPerformDTMFAction', onDTMF);
+    RNCallKeep.addEventListener('didToggleHoldCallAction', onToggleHold);
   };
 
   const getLocalStream = () => mediaDevices.getUserMedia({
@@ -313,9 +314,9 @@ const Dialer = ({ onLogout }) => {
     call(handle);
   };
 
-  const toggleHold = () => {
-    Wazo.Phone[held ? 'unhold' : 'hold'](currentSession);
-    dispatch({ held: !held });
+  const toggleHold = shouldHold => {
+    Wazo.Phone[shouldHold ? 'hold' : 'resume'](currentSession);
+    dispatch({ held: shouldHold });
   };
 
   const toggleVideoHold = () => {
@@ -330,6 +331,10 @@ const Dialer = ({ onLogout }) => {
   const onToggleMute = (muted) => {
     // Called when the system or the user mutes a call
     Wazo.Phone[muted ? 'mute' : 'unmute'](currentSession);
+  };
+
+  const onToggleHold = ({ callUUID, hold }) => {
+    toggleHold(hold);
   };
 
   const onDTMF = (action) => {
@@ -400,7 +405,7 @@ const Dialer = ({ onLogout }) => {
             <Button block onPress={hangup} style={styles.button}>
               <Text>Hangup</Text>
             </Button>
-            <Button block onPress={toggleHold} style={styles.button}>
+            <Button block onPress={() => toggleHold(!held)} style={styles.button}>
               <Text>{held ? 'Unhold' : 'Hold' }</Text>
             </Button>
             {isVideo && (

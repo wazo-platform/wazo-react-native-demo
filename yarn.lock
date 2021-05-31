@@ -1944,10 +1944,10 @@
   dependencies:
     invariant "^2.2.4"
 
-"@wazo/sdk@^0.35.8-rc.3":
-  version "0.35.8-rc.3"
-  resolved "https://registry.yarnpkg.com/@wazo/sdk/-/sdk-0.35.8-rc.3.tgz#c1efde5e47f0d2008fce065a1d74fe6aa757f2a9"
-  integrity sha512-FML0+2u/CTDqhSZR0FDO/89KeNTkcm/vzOe64C7E6VcHC87Q8VPxUZ7TehtV+4qpcnmkig5tRCFoRhQtsdXmKw==
+"@wazo/sdk@^0.35.8-rc.6":
+  version "0.35.8-rc.6"
+  resolved "https://registry.yarnpkg.com/@wazo/sdk/-/sdk-0.35.8-rc.6.tgz#8cda0d77500f4c8972277e0b2829650c50fb89f8"
+  integrity sha512-9ayUzFOeFjVdzSPQIjVbi9L8/2wh5f5EItXg+bFPZZj2I+EPb/+2BMWk0xv65PMpKXWIm4w+SNU3j6WwQyqn7Q==
   dependencies:
     events "^3.3.0"
     fstream "^1.0.12"
