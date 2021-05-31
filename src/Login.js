@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     paddingTop: 50,
   },
   logoContainer: {
-   textAlign: 'center',
+    textAlign: 'center',
     alignItems: 'center',
   },
   logo: {
@@ -55,9 +55,9 @@ const Login = ({ defaultUsername = '', defaultPassword = '', defaultServer = '',
     await requestNotifications(['alert', 'sound']);
 
     if (isIOS) {
-      await request( PERMISSIONS.IOS.MICROPHONE);
-      await request( PERMISSIONS.IOS.CAMERA);
-      VoipPushNotification.requestPermissions();
+      await request(PERMISSIONS.IOS.MICROPHONE);
+      await request(PERMISSIONS.IOS.CAMERA);
+      // VoipPushNotification.requestPermissions();
       VoipPushNotification.addEventListener('register', async (token) => {
         apnsToken = token;
         console.log('setting apnsToken', apnsToken);
@@ -118,7 +118,7 @@ const Login = ({ defaultUsername = '', defaultPassword = '', defaultServer = '',
 
     if (apnsToken) {
       try {
-         await getApiClient().auth.removeDeviceToken(session.uuid);
+        await getApiClient().auth.removeDeviceToken(session.uuid);
       } catch (_) {
         // Avoid to fail when trying to remove a non-existent token
       }
@@ -143,38 +143,38 @@ const Login = ({ defaultUsername = '', defaultPassword = '', defaultServer = '',
         </View>
 
         <Form>
-         <Item stackedLabel>
-           <Label>Username</Label>
-           <Input
-             autoCapitalize="none"
-             autoCorrect={false}
-             onChangeText={setUsername}
-             value={username}
-             onSubmitEditing={login}
-           />
-         </Item>
-         <Item stackedLabel>
-           <Label>Password</Label>
-           <Input
-             autoCapitalize="none"
-             autoCorrect={false}
-             onChangeText={setPassword}
-             value={password}
-             secureTextEntry
-             onSubmitEditing={login}
-           />
-         </Item>
           <Item stackedLabel>
-           <Label>Server</Label>
-           <Input
-             autoCapitalize="none"
-             autoCorrect={false}
-             keyboardType={isIOS ? 'url' : 'email-address'}
-             value={server}
-             onChangeText={setServer}
-             onSubmitEditing={login}
-           />
-         </Item>
+            <Label>Username</Label>
+            <Input
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={setUsername}
+              value={username}
+              onSubmitEditing={login}
+            />
+          </Item>
+          <Item stackedLabel>
+            <Label>Password</Label>
+            <Input
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={setPassword}
+              value={password}
+              secureTextEntry
+              onSubmitEditing={login}
+            />
+          </Item>
+          <Item stackedLabel>
+            <Label>Server</Label>
+            <Input
+              autoCapitalize="none"
+              autoCorrect={false}
+              keyboardType={isIOS ? 'url' : 'email-address'}
+              value={server}
+              onChangeText={setServer}
+              onSubmitEditing={login}
+            />
+          </Item>
         </Form>
 
         {authenticating && <Spinner color="blue" />}

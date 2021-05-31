@@ -4,17 +4,27 @@ import RNCallKeep from 'react-native-callkeep';
 import ramdomUuid from 'uuid-random';
 import {Container, Content, Form, Input, Item, Label, Button, Footer } from 'native-base';
 import { RTCPeerConnection, RTCSessionDescription, MediaStream, mediaDevices, RTCView } from 'react-native-webrtc';
+import MediaStreamTrackEvent from 'react-native-webrtc/MediaStreamTrackEvent';
+import MediaStreamTrack from 'react-native-webrtc/MediaStreamTrack';
 import Wazo from '@wazo/sdk/lib/simple';
-import AsyncStorage from "@react-native-community/async-storage";
+import AsyncStorage from '@react-native-community/async-storage';
 
-// Polyfill WebRTC
+// Polyfill webrtc
 global.MediaStream = MediaStream;
+global.MediaStreamTrack = MediaStreamTrack;
 global.RTCSessionDescription = RTCSessionDescription;
 global.RTCPeerConnection = RTCPeerConnection;
-global.navigator.mediaDevices = {
-  ...global.navigator.mediaDevices,
-  getUserMedia: mediaDevices.getUserMedia,
-};
+global.window.RTCPeerConnection = RTCPeerConnection;
+if (global.navigator) {
+  global.navigator.mediaDevices = {
+    ...global.navigator.mediaDevices || {},
+    getUserMedia: mediaDevices.getUserMedia,
+  };
+} else {
+  global.navigator = {};
+}
+global.MediaStreamTrackEvent = MediaStreamTrackEvent;
+global.InstallTrigger = true;
 
 const styles = StyleSheet.create({
   content: {
@@ -69,7 +79,6 @@ const initialState = {
   ready: false,
   number: '',
   ringing: false,
-  inCall: false,
   held: false,
   videoHeld: false,
   error: null,
@@ -79,17 +88,24 @@ const initialState = {
 
 // Can't be put in react state or it won't be updated in callkeep events.
 let currentSession;
+let inCall = false;
+
+const foregroundService = {
+  channelId: 'io.wazo.demo',
+  channelName: 'Call active with wazo demo',
+  notificationTitle: 'Wazo demo is currently active',
+};
 
 const Dialer = ({ onLogout }) => {
   const [ state, dispatch ] = useReducer(reducer, initialState);
-  const { number, ringing, inCall, held, localStreamURL, remoteStreamURL, ready, videoHeld } = state;
+  const { number, ringing, held, localStreamURL, remoteStreamURL, ready, videoHeld } = state;
   let currentCallId;
   let localStream;
   let remoteStream;
 
   const getCurrentCallId = () => {
     if (!currentCallId) {
-      currentCallId = ramdomUuid().toLowerCase();
+      currentCallId = ramdomUuid().toUpperCase();
     }
 
     return currentCallId;
@@ -120,17 +136,23 @@ const Dialer = ({ onLogout }) => {
   const initializeCallKeep = async () => {
     try {
       RNCallKeep.setup({
-      ios: {
-        appName: 'WazoReactNativeDemo',
-      },
-      android: {
-        alertTitle: 'Permissions required',
-        alertDescription: 'This application needs to access your phone accounts',
-        cancelButton: 'Cancel',
-        okButton: 'ok',
-      }
-    });
+        ios: {
+          appName: 'WazoReactNativeDemo',
+        },
+        android: {
+          alertTitle: 'Permissions required',
+          alertDescription: 'This application needs to access your phone accounts',
+          cancelButton: 'Cancel',
+          okButton: 'ok',
+          foregroundService
+        }
+      });
       RNCallKeep.setAvailable(true);
+      if (!isIOS) {
+        RNCallKeep.registerAndroidEvents();
+        RNCallKeep.canMakeMultipleCalls(false);
+        RNCallKeep.setForegroundServiceSettings(foregroundService);
+      }
     } catch (err) {
       console.error('initializeCallKeep error:', err.message);
     }
@@ -166,7 +188,13 @@ const Dialer = ({ onLogout }) => {
     currentSession = callSession;
 
     Wazo.Phone.on(Wazo.Phone.ON_CALL_FAILED, (response, cause) => {
-      dispatch({ error: cause, ringing: false, inCall: false });
+      inCall = false;
+      dispatch({ error: cause, ringing: false });
+    });
+
+    Wazo.Phone.on(Wazo.Phone.ON_CALL_ERROR, (response, cause) => {
+      inCall = false;
+      dispatch({ error: cause, ringing: false });
     });
 
     Wazo.Phone.on(Wazo.Phone.ON_CALL_ENDED, () => {
@@ -191,6 +219,8 @@ const Dialer = ({ onLogout }) => {
           RNCallKeep.backToForeground();
         }
       }
+
+      RNCallKeep.setCurrentCallActive(getCurrentCallId());
     });
   };
 
@@ -198,21 +228,22 @@ const Dialer = ({ onLogout }) => {
     const session = await Wazo.Phone.call(number, video);
     setupCallSession(session);
 
-    dispatch({ inCall: true, ringing: false });
+    inCall = true;
+    await dispatch({ ringing: false });
 
     RNCallKeep.startCall(getCurrentCallId(), number, number, 'number', video);
   };
 
   const answer = withVideo => {
-    dispatch({ inCall: true, ringing: false });
+    inCall = true;
+    dispatch({ ringing: false });
     RNCallKeep.setCurrentCallActive();
 
     Wazo.Phone.accept(currentSession, withVideo);
   };
 
   const hangup = async () => {
-    const currentCallId = getCurrentCallId();
-    if (!currentSession || !currentCallId) {
+    if (!currentSession) {
       return;
     }
 
@@ -226,11 +257,15 @@ const Dialer = ({ onLogout }) => {
   };
 
   const onCallTerminated = () => {
-    if (currentCallId) {
-      RNCallKeep.endCall(currentCallId);
+    if (!currentCallId || !currentSession) {
+      return;
     }
+
+    // Don't call endCall on Android when camera is enabled
+    RNCallKeep.endCall(currentCallId);
+
+    inCall = false;
     dispatch({
-      inCall: false,
       ringing: false,
       currentCallId: null,
       remoteStreamURL: null,
@@ -325,14 +360,14 @@ const Dialer = ({ onLogout }) => {
 
       <Content style={styles.content}>
         <Form style={styles.form}>
-         <Item stackedLabel>
-           <Label>Extension</Label>
-           <Input
-             autoCapitalize="none"
-             onChangeText={value => dispatch({ number: value })}
-             value={number}
-           />
-         </Item>
+          <Item stackedLabel>
+            <Label>Extension</Label>
+            <Input
+              autoCapitalize="none"
+              onChangeText={value => dispatch({ number: value })}
+              value={number}
+            />
+          </Item>
         </Form>
 
         {!ringing && !inCall && (
