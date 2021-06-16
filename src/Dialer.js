@@ -240,7 +240,7 @@ const Dialer = ({ onLogout }) => {
   const answer = withVideo => {
     inCall = true;
     dispatch({ ringing: false });
-    RNCallKeep.setCurrentCallActive();
+    RNCallKeep.setCurrentCallActive(getCurrentCallId());
 
     Wazo.Phone.accept(currentSession, withVideo);
   };
