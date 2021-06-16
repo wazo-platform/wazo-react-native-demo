@@ -4,7 +4,7 @@ import Login from './Login';
 import Dialer from './Dialer';
 
 const defaultUsername = '';
-const defaultServer = 'demo.wazo.community';
+const defaultServer = '';
 
 const App = () => {
   const [session, setSession] = useState(null);

@@ -1,4 +1,18 @@
 {
   "name": "WazoReactNativeDemo",
-  "displayName": "WazoReactNativeDemo"
+  "displayName": "WazoReactNativeDemo",
+  "expo": {
+    "name": "WazoReactNativeDemo",
+    "slug": "WazoReactNativeDemo",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "android": {
+      "package": "io.wazo"
+    },
+    "ios": {
+      "bundleIdentifier": "io.wazo"
+    }
+  }
 }

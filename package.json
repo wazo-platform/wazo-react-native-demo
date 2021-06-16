@@ -5,40 +5,34 @@
     "ios": "react-native run-ios",
     "web": "expo start --web",
     "start": "react-native start",
-    "test": "jest",
-    "postinstall": "jetify && yarn download-webrtc-bitecode",
-    "download-webrtc-bitecode": "./node_modules/react-native-webrtc/tools/downloadBitcode.sh",
     "apk": "cd android && ./gradlew assembleRelease && cd .."
   },
   "dependencies": {
-    "@react-native-community/async-storage": "^1.11.0",
-    "@wazo/sdk": "0.32.13",
-    "expo": "~37.0.3",
-    "expo-splash-screen": "^0.2.3",
-    "expo-updates": "~0.2.0",
-    "native-base": "^2.13.12",
-    "react": "~16.9.0",
-    "react-dom": "~16.9.0",
-    "react-native": "~0.61.5",
-    "react-native-callkeep": "3.0.13",
-    "react-native-gesture-handler": "~1.6.0",
-    "react-native-permissions": "^2.1.5",
-    "react-native-reanimated": "~1.7.0",
-    "react-native-screens": "~2.2.0",
-    "react-native-unimodules": "~0.9.0",
-    "react-native-voip-push-notification": "^2.1.0",
-    "react-native-web": "~0.11.7",
-    "react-native-webrtc": "^1.75.3",
-    "uuid-random": "^1.3.0"
+    "@react-native-community/async-storage": "^1.12.1",
+    "@wazo/sdk": "^0.35.8-rc.6",
+    "expo": "~41.0.1",
+    "expo-splash-screen": "~0.10.2",
+    "expo-status-bar": "~1.0.4",
+    "expo-updates": "~0.5.4",
+    "native-base": "^2.15.2",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
+    "react-native": "~0.63.4",
+    "react-native-callkeep": "^4.2.0",
+    "react-native-gesture-handler": "~1.10.2",
+    "react-native-permissions": "^3.0.4",
+    "react-native-reanimated": "~2.1.0",
+    "react-native-screens": "~3.0.0",
+    "react-native-unimodules": "~0.13.3",
+    "react-native-voip-push-notification": "^3.3.0",
+    "react-native-web": "~0.13.12",
+    "react-native-webrtc": "^1.89.2",
+    "uuid-random": "^1.3.2"
   },
   "devDependencies": {
-    "@babel/core": "~7.9.0",
-    "babel-jest": "~25.2.6",
-    "jest": "~25.2.6",
-    "react-test-renderer": "~16.9.0"
+    "@babel/core": "^7.9.0"
   },
-  "jest": {
-    "preset": "react-native"
-  },
-  "private": true
+  "private": true,
+  "name": "wazo-react-native-demo",
+  "version": "1.0.0"
 }
