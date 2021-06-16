@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useReducer, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, Dimensions, Platform } from 'react-native';
 import RNCallKeep from 'react-native-callkeep';
 import ramdomUuid from 'uuid-random';
@@ -99,16 +99,16 @@ const foregroundService = {
 const Dialer = ({ onLogout }) => {
   const [ state, dispatch ] = useReducer(reducer, initialState);
   const { number, ringing, held, localStreamURL, remoteStreamURL, ready, videoHeld } = state;
-  let currentCallId;
-  let localStream;
-  let remoteStream;
+  let currentCallId = useRef(null);
+  let localStream = useRef(null);
+  let remoteStream = useRef(null);
 
   const getCurrentCallId = () => {
-    if (!currentCallId) {
-      currentCallId = ramdomUuid().toUpperCase();
+    if (!currentCallId.current) {
+      currentCallId.current = ramdomUuid().toUpperCase();
     }
 
-    return currentCallId;
+    return currentCallId.current;
   };
 
   const init = async () => {
@@ -129,6 +129,7 @@ const Dialer = ({ onLogout }) => {
 
       // Tell callkeep that we a call is incoming for audio calls
       const { number } = callSession;
+      console.log('displayIncoming', getCurrentCallId());
       RNCallKeep.displayIncomingCall(getCurrentCallId(), number, number, 'number', true);
     });
   };
@@ -207,12 +208,12 @@ const Dialer = ({ onLogout }) => {
       // Setup local stream
       if (callSession.cameraEnabled) {
         const { peerConnection } = session.sessionDescriptionHandler;
-        localStream = peerConnection.getLocalStreams().find(stream => !!stream.getVideoTracks().length);
-        remoteStream = peerConnection.getRemoteStreams().find(stream => !!stream.getVideoTracks().length);
+        localStream.current = peerConnection.getLocalStreams().find(stream => !!stream.getVideoTracks().length);
+        remoteStream .current= peerConnection.getRemoteStreams().find(stream => !!stream.getVideoTracks().length);
 
         dispatch({
-          localStreamURL: localStream ? localStream.toURL() : null,
-          remoteStreamURL: remoteStream ? remoteStream.toURL() : null,
+          localStreamURL: localStream.current ? localStream.current.toURL() : null,
+          remoteStreamURL: remoteStream.current ? remoteStream.current.toURL() : null,
         });
 
         // On Android display the app when answering a video call
@@ -232,6 +233,7 @@ const Dialer = ({ onLogout }) => {
     inCall = true;
     await dispatch({ ringing: false });
 
+    console.log('startCall', getCurrentCallId());
     RNCallKeep.startCall(getCurrentCallId(), number, number, 'number', video);
   };
 
@@ -258,31 +260,30 @@ const Dialer = ({ onLogout }) => {
   };
 
   const onCallTerminated = () => {
-    if (!currentCallId || !currentSession) {
+    if (!currentCallId.current || !currentSession) {
       return;
     }
 
     // Don't call endCall on Android when camera is enabled
-    RNCallKeep.endCall(currentCallId);
+    RNCallKeep.endCall(getCurrentCallId());
 
     inCall = false;
     dispatch({
       ringing: false,
-      currentCallId: null,
       remoteStreamURL: null,
       localStreamURL: null,
     });
 
-    if (remoteStream) {
-      remoteStream.release();
-      remoteStream = null;
+    if (remoteStream.current) {
+      remoteStream.current.release();
+      remoteStream.current = null;
     }
-    if (localStream) {
-      localStream.release();
-      localStream = null;
+    if (localStream.current) {
+      localStream.current.release();
+      localStream.current = null;
     }
 
-    currentCallId = null;
+    currentCallId.current = null;
     currentSession = null;
 
     displayLocalVideo();
@@ -394,7 +395,7 @@ const Dialer = ({ onLogout }) => {
             </Button>
           </View>
         )}
-        {ringing && (
+        {currentSession && ringing && (
           <View style={styles.buttonsContainer}>
             <Button onPress={() => answer(false)} style={styles.button}>
               <Text style={styles.centeredText}>
